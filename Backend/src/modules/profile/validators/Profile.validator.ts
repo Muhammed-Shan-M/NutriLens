@@ -7,9 +7,9 @@ export const updateProfileSchema = z.object({
   height: z.number().min(100, 'Height must be at least 100 cm').max(250, 'Height cannot exceed 250 cm'),
   weight: z.number().min(30, 'Weight must be at least 30 kg').max(300, 'Weight cannot exceed 300 kg'),
   activityLevel: z.nativeEnum(ActivityLevel, {
-    invalid_type_error: 'Invalid activity level selected'
+    error: 'Invalid activity level selected'
   }),
   goal: z.nativeEnum(FitnessGoal, {
-    invalid_type_error: 'Invalid fitness goal selected'
+    error: 'Invalid fitness goal selected'
   })
 });

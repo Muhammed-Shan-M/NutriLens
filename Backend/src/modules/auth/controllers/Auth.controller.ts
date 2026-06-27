@@ -104,7 +104,7 @@ export class AuthController {
 
   public me = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user!.id;
       const user = await this.authService.getCurrentUser(userId);
       
       ApiResponse.success(
@@ -120,7 +120,7 @@ export class AuthController {
 
   public updateMetrics = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user!.id;
       const user = await this.authService.updateMetrics(userId, req.body);
       
       ApiResponse.success(
@@ -136,7 +136,7 @@ export class AuthController {
 
   public completeOnboarding = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user!.id;
       const user = await this.authService.completeOnboarding(userId);
       
       ApiResponse.success(

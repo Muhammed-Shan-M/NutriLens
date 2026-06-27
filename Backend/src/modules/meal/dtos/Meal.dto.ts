@@ -12,7 +12,7 @@ export interface AnalyzeMealInputDto {
 
 export interface UpdateMealInputDto {
   mealName?: string;
-  mealType?: string;
+  mealType?: MealType;
   totalCalories?: number;
   protein?: number;
   carbohydrates?: number;
@@ -24,7 +24,7 @@ export interface UpdateMealInputDto {
 
 export interface CreateMealInputDto {
   foodName: string;
-  mealType: string;
+  mealType: MealType;
   calories: number;
   protein?: number;
   carbohydrates?: number;

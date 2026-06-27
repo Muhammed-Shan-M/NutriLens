@@ -1,9 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import ErrorState from '@/components/ui/ErrorState';
 
 export const ErrorPage: React.FC<{ error?: Error }> = ({ error }) => {
-  const navigate = useNavigate();
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">

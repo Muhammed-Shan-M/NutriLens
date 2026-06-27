@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Flame, Beef, Croissant, Droplet, Camera, Target } from 'lucide-react';
+import { Flame, Beef, Croissant, Droplet, Camera } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardSummary } from '@/lib/dashboard.api';
 import PageContainer from '@/components/ui/PageContainer';
