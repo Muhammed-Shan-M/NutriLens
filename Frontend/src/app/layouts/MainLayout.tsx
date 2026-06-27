@@ -15,6 +15,7 @@ import {
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import toast from 'react-hot-toast';
+import FRONTEND_ROUTES from '../router/routes.constants';
 
 export const MainLayout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,18 +23,18 @@ export const MainLayout: React.FC = () => {
   const { logout, user } = useAuth();
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Meals', path: '/meals', icon: Utensils },
-    { name: 'History', path: '/history', icon: History },
-    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
-    { name: 'Profile', path: '/profile', icon: User },
+    { name: 'Dashboard', path: FRONTEND_ROUTES.DASHBOARD, icon: LayoutDashboard },
+    { name: 'Meals', path: FRONTEND_ROUTES.MEALS, icon: Utensils },
+    { name: 'History', path: FRONTEND_ROUTES.HISTORY, icon: History },
+    { name: 'Analytics', path: FRONTEND_ROUTES.ANALYTICS, icon: BarChart3 },
+    { name: 'Profile', path: FRONTEND_ROUTES.PROFILE, icon: User },
   ];
 
   const handleLogout = async () => {
     try {
       await logout();
       toast.success('Successfully logged out!');
-      navigate('/', { replace: true });
+      navigate(FRONTEND_ROUTES.LANDING, { replace: true });
     } catch {
       toast.error('Logout failed. Please try again.');
     }
@@ -120,7 +121,7 @@ export const MainLayout: React.FC = () => {
           <div className="flex items-center gap-3">
             {/* Quick action button */}
             <button
-              onClick={() => navigate('/analytics')}
+              onClick={() => navigate(FRONTEND_ROUTES.ANALYTICS)}
               className="hidden sm:inline-flex items-center px-3.5 py-1.5 text-xs font-medium bg-primary text-background rounded-full hover:bg-primary/90 transition-all shadow-md shadow-primary/10 hover:-translate-y-0.5"
             >
               <Sparkles className="h-3.5 w-3.5 mr-1.5" />
@@ -129,7 +130,7 @@ export const MainLayout: React.FC = () => {
             
             {/* User Profile Mini Badge */}
             <div 
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate(FRONTEND_ROUTES.PROFILE)}
               className="flex items-center gap-2 cursor-pointer p-1 pr-3 rounded-full bg-slate-900 hover:bg-slate-850 transition border border-slate-850 group"
             >
               <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase group-hover:bg-primary/30 transition-colors">

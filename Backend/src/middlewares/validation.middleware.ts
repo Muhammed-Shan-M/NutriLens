@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError, ZodIssue, ZodTypeAny } from 'zod';
 import { ApiError } from '../shared/ApiError';
+import { ERROR_MESSAGES } from '../shared/errorMessages.constants';
 
 export const validate = (schema: ZodTypeAny) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -25,7 +26,7 @@ export const validate = (schema: ZodTypeAny) => {
           message: issue.message,
         }));
 
-        next(new ApiError(400, 'Validation failure', validationErrors));
+        next(new ApiError(400, ERROR_MESSAGES.VALIDATION.FAILURE, validationErrors));
       } else {
         next(error);
       }

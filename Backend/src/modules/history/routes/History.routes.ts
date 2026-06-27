@@ -5,6 +5,7 @@ import { HistoryRepository } from '../repositories/History.repository';
 import { authMiddleware } from '../../../middlewares/auth.middleware';
 import { validate } from '../../../middlewares/validation.middleware';
 import { getHistoryQuerySchema } from '../validators/History.validator';
+import ROUTES from '../../../shared/routes.constants';
 
 const router = Router();
 
@@ -15,7 +16,7 @@ const historyController = new HistoryController(historyService);
 
 // GET /api/history
 router.get(
-  '/',
+  ROUTES.HISTORY.BASE,
   authMiddleware,
   validate(getHistoryQuerySchema),
   historyController.getHistory

@@ -12,6 +12,7 @@ import AiInsightCard from '@/features/analytics/components/AiInsightCard';
 import StatCard from '@/features/analytics/components/StatCard';
 import AnalyticsSkeleton from '@/features/analytics/components/AnalyticsSkeleton';
 import EmptyState from '@/components/ui/EmptyState';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -91,7 +92,7 @@ const AnalyticsPage: React.FC = () => {
             title="No analytics available yet"
             description="Continue tracking your meals to unlock powerful insights about your nutrition habits, macronutrient breakdown, and goal progress."
             actionLabel="Log Your First Meal"
-            onAction={() => navigate('/meals')}
+            onAction={() => navigate(FRONTEND_ROUTES.MEALS)}
           />
         )}
 

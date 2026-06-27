@@ -2,6 +2,7 @@ import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import { Readable } from 'stream';
 import { config } from '../../../config';
 import { ApiError } from '../../../shared/ApiError';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 cloudinary.config({
   cloud_name: config.cloudinaryCloudName,
@@ -34,7 +35,7 @@ export class CloudinaryService {
         },
         (error, result: UploadApiResponse | undefined) => {
           if (error || !result) {
-            reject(ApiError.internal(`Cloudinary upload failed: ${error?.message ?? 'Unknown error'}`));
+            reject(ApiError.internal(ERROR_MESSAGES.CLOUDINARY.UPLOAD_FAILED(error?.message ?? 'Unknown error')));
             return;
           }
           resolve({

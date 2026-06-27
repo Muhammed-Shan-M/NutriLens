@@ -6,6 +6,7 @@ import { RegisterInputDto, LoginInputDto, UpdateMetricsInputDto, AuthResponseDto
 import { IUserDocument } from '../models/User.model';
 import { ApiError } from '../../../shared/ApiError';
 import { config } from '../../../config';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 import { UserMapper } from '../mappers/User.mapper';
 import { NutritionCalculator } from '../../../shared/utils/NutritionCalculator';
 
@@ -31,11 +32,11 @@ export class AuthService implements IAuthService {
   async register(dto: RegisterInputDto): Promise<AuthResponseDto> {
     const existing = await this.userRepository.findByEmail(dto.email);
     if (existing) {
-      throw ApiError.badRequest('A user with this email address already exists.');
+      throw ApiError.badRequest(ERROR_MESSAGES.AUTH.EMAIL_EXISTS);
     }
 
     if (!dto.password) {
-      throw ApiError.badRequest('Password is required.');
+      throw ApiError.badRequest(ERROR_MESSAGES.AUTH.PASSWORD_REQUIRED);
     }
 
     // Hash the password
@@ -63,17 +64,17 @@ export class AuthService implements IAuthService {
   async login(dto: LoginInputDto): Promise<AuthResponseDto> {
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user || !user.password) {
-      throw ApiError.unauthorized('Invalid email or password.');
+      throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
     }
 
     if (!dto.password) {
-      throw ApiError.badRequest('Password is required.');
+      throw ApiError.badRequest(ERROR_MESSAGES.AUTH.PASSWORD_REQUIRED);
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
-      throw ApiError.unauthorized('Invalid email or password.');
+      throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS);
     }
 
     const accessToken = this.generateAccessToken(user);
@@ -88,7 +89,7 @@ export class AuthService implements IAuthService {
 
   async refreshToken(token: string): Promise<{ accessToken: string }> {
     if (!token) {
-      throw ApiError.unauthorized('Refresh token is missing. Please sign in again.');
+      throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.REFRESH_TOKEN_MISSING);
     }
 
     try {
@@ -96,16 +97,16 @@ export class AuthService implements IAuthService {
       const user = await this.userRepository.findById(decoded.id);
       
       if (!user) {
-        throw ApiError.unauthorized('User associated with this token was not found.');
+        throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.TOKEN_USER_NOT_FOUND);
       }
 
       const accessToken = this.generateAccessToken(user);
       return { accessToken };
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'TokenExpiredError') {
-        throw new ApiError(401, 'Your refresh session has expired. Please sign in again.');
+        throw new ApiError(401, ERROR_MESSAGES.AUTH.REFRESH_SESSION_EXPIRED);
       }
-      throw ApiError.unauthorized('Invalid refresh session. Please sign in again.');
+      throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.INVALID_REFRESH_SESSION);
     }
   }
 
@@ -113,7 +114,7 @@ export class AuthService implements IAuthService {
     const { age, gender, height, weight, activityLevel, goal } = dto;
 
     if (!age || !gender || !height || !weight || !activityLevel || !goal) {
-      throw ApiError.badRequest('All onboarding metrics are required.');
+      throw ApiError.badRequest(ERROR_MESSAGES.AUTH.METRICS_REQUIRED);
     }
 
     // Calculate all metrics using the shared utility
@@ -139,7 +140,7 @@ export class AuthService implements IAuthService {
 
     const updatedUser = await this.userRepository.update(id, updateData);
     if (!updatedUser) {
-      throw ApiError.notFound('User profile not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.PROFILE.NOT_FOUND);
     }
 
     return updatedUser;
@@ -148,7 +149,7 @@ export class AuthService implements IAuthService {
   async completeOnboarding(id: string): Promise<IUserDocument> {
     const updatedUser = await this.userRepository.update(id, { isOnboarded: true });
     if (!updatedUser) {
-      throw ApiError.notFound('User profile not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.PROFILE.NOT_FOUND);
     }
     return updatedUser;
   }
@@ -156,7 +157,7 @@ export class AuthService implements IAuthService {
   async getCurrentUser(id: string): Promise<IUserDocument> {
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw ApiError.unauthorized('User session is invalid. User not found.');
+      throw ApiError.unauthorized(ERROR_MESSAGES.AUTH.SESSION_INVALID_USER_NOT_FOUND);
     }
     return user;
   }

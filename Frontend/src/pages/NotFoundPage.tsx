@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/components/ui/Button';
 import { Home, Compass } from 'lucide-react';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 export const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ export const NotFoundPage: React.FC = () => {
           </Button>
           <Button
             variant="primary"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(FRONTEND_ROUTES.DASHBOARD)}
             leftIcon={<Home className="h-4 w-4" />}
           >
             Dashboard

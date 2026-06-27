@@ -3,6 +3,7 @@ import jwt, { VerifyErrors, JwtPayload } from 'jsonwebtoken';
 import { config } from '../config';
 import { ApiError } from '../shared/ApiError';
 import { UserRole } from '../shared/enums';
+import { ERROR_MESSAGES } from '../shared/errorMessages.constants';
 
 interface DecodedToken {
   id: string;
@@ -29,16 +30,16 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
 
     // 3. Reject if no token is found
     if (!token) {
-      return next(ApiError.unauthorized('Authentication token is missing. Please sign in.'));
+      return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.TOKEN_MISSING));
     }
 
     // 4. Verify token
     jwt.verify(token, config.jwtAccessSecret, (err: VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
       if (err) {
         if (err.name === 'TokenExpiredError') {
-          return next(new ApiError(401, 'Your session has expired. Please sign in again.'));
+          return next(new ApiError(401, ERROR_MESSAGES.AUTH.SESSION_EXPIRED));
         }
-        return next(ApiError.unauthorized('Invalid authentication token. Please sign in again.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.TOKEN_INVALID));
       }
 
       // 5. Attach decoded user payload to request

@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { IMealService } from '../interfaces/IMealService.interface';
 import { ApiResponse } from '../../../shared/ApiResponse';
 import { ApiError } from '../../../shared/ApiError';
+import { SUCCESS_MESSAGES } from '../../../shared/successMessages.constants';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class MealController {
   constructor(private readonly mealService: IMealService) {
@@ -18,12 +20,12 @@ export class MealController {
     try {
       const file = req.file;
       if (!file) {
-        return next(ApiError.badRequest('No image file provided. Please upload a JPEG, PNG, or WEBP image.'));
+        return next(ApiError.badRequest(ERROR_MESSAGES.MEAL.IMAGE_REQUIRED));
       }
 
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.analyzeMeal(
@@ -33,7 +35,7 @@ export class MealController {
         file.originalname
       );
 
-      ApiResponse.success(res, 201, 'Meal analyzed and saved successfully.', result);
+      ApiResponse.success(res, 201, SUCCESS_MESSAGES.MEAL.ANALYZED, result);
     } catch (error) {
       next(error);
     }
@@ -43,11 +45,11 @@ export class MealController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.createMeal(userId, req.body);
-      ApiResponse.success(res, 201, 'Meal logged successfully.', result);
+      ApiResponse.success(res, 201, SUCCESS_MESSAGES.MEAL.LOGGED, result);
     } catch (error) {
       next(error);
     }
@@ -57,11 +59,11 @@ export class MealController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.getMealHistory(userId);
-      ApiResponse.success(res, 200, 'Meal history retrieved successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.HISTORY_RETRIEVED, result);
     } catch (error) {
       next(error);
     }
@@ -72,11 +74,11 @@ export class MealController {
       const id = req.params.id as string;
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.getMealById(id, userId);
-      ApiResponse.success(res, 200, 'Meal log retrieved successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.LOG_RETRIEVED, result);
     } catch (error) {
       next(error);
     }
@@ -87,11 +89,11 @@ export class MealController {
       const id = req.params.id as string;
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.updateMeal(id, userId, req.body);
-      ApiResponse.success(res, 200, 'Meal log updated successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.LOG_UPDATED, result);
     } catch (error) {
       next(error);
     }
@@ -101,11 +103,11 @@ export class MealController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const result = await this.mealService.getTodayMeals(userId);
-      ApiResponse.success(res, 200, 'Today\'s meals fetched successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.TODAY_FETCHED, result);
     } catch (error) {
       next(error);
     }
@@ -116,11 +118,11 @@ export class MealController {
       const id = req.params.id as string;
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       await this.mealService.deleteMeal(id, userId);
-      ApiResponse.success(res, 200, 'Meal log deleted successfully.');
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.LOG_DELETED);
     } catch (error) {
       next(error);
     }

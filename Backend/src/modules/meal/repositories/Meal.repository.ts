@@ -1,6 +1,7 @@
 import { IMealRepository } from '../interfaces/IMealRepository.interface';
 import { IMealDocument, MealModel } from '../models/Meal.model';
 import { ApiError } from '../../../shared/ApiError';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class MealRepository implements IMealRepository {
   async create(data: Partial<IMealDocument>): Promise<IMealDocument> {
@@ -8,7 +9,7 @@ export class MealRepository implements IMealRepository {
       const meal = new MealModel(data);
       return await meal.save();
     } catch (error) {
-      throw ApiError.internal('Failed to save meal to database.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.SAVE_MEAL_FAILED);
     }
   }
 
@@ -16,7 +17,7 @@ export class MealRepository implements IMealRepository {
     try {
       return await MealModel.findById(id).lean<IMealDocument>();
     } catch (error) {
-      throw ApiError.internal('Failed to fetch meal.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.FETCH_MEAL_FAILED);
     }
   }
 
@@ -27,7 +28,7 @@ export class MealRepository implements IMealRepository {
         .limit(limit)
         .lean<IMealDocument[]>();
     } catch (error) {
-      throw ApiError.internal('Failed to fetch meal history.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.FETCH_HISTORY_FAILED);
     }
   }
 
@@ -46,7 +47,7 @@ export class MealRepository implements IMealRepository {
         .sort({ createdAt: -1 })
         .lean<IMealDocument[]>();
     } catch (error) {
-      throw ApiError.internal('Failed to fetch today\'s meals.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.FETCH_TODAY_FAILED);
     }
   }
 
@@ -54,7 +55,7 @@ export class MealRepository implements IMealRepository {
     try {
       return await MealModel.findByIdAndUpdate(id, { $set: data }, { new: true });
     } catch (error) {
-      throw ApiError.internal('Failed to update meal record.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.UPDATE_RECORD_FAILED);
     }
   }
 
@@ -62,7 +63,7 @@ export class MealRepository implements IMealRepository {
     try {
       await MealModel.findByIdAndDelete(id);
     } catch (error) {
-      throw ApiError.internal('Failed to delete meal.');
+      throw ApiError.internal(ERROR_MESSAGES.DATABASE.DELETE_FAILED);
     }
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldAlert, ArrowLeft } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 export const UnauthorizedPage: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ export const UnauthorizedPage: React.FC = () => {
           </Button>
           <Button
             variant="warning"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(FRONTEND_ROUTES.LANDING)}
           >
             Go to Login
           </Button>

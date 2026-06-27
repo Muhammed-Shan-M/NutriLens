@@ -23,6 +23,7 @@ import {
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 import heroImage from '@/assets/hero_dashboard_mockup.png';
 
 export const LandingPage: React.FC = () => {
@@ -202,7 +203,7 @@ export const LandingPage: React.FC = () => {
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => navigate('/login')}
+              onClick={() => navigate(FRONTEND_ROUTES.LOGIN)}
               className="border-slate-800 hover:border-slate-700 text-slate-200"
             >
               Login
@@ -210,7 +211,7 @@ export const LandingPage: React.FC = () => {
             <Button 
               variant="primary" 
               size="sm" 
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate(FRONTEND_ROUTES.SIGNUP)}
               className="px-5"
             >
               Sign Up
@@ -257,14 +258,14 @@ export const LandingPage: React.FC = () => {
               <div className="grid grid-cols-2 gap-3 pt-3">
                 <Button 
                   variant="outline" 
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate(FRONTEND_ROUTES.LOGIN)}
                   className="w-full border-slate-800 text-slate-200"
                 >
                   Login
                 </Button>
                 <Button 
                   variant="primary" 
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate(FRONTEND_ROUTES.SIGNUP)}
                   className="w-full"
                 >
                   Sign Up
@@ -303,7 +304,7 @@ export const LandingPage: React.FC = () => {
               <Button 
                 variant="primary" 
                 size="lg" 
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate(FRONTEND_ROUTES.SIGNUP)}
                 rightIcon={<ArrowRight className="h-4 w-4" />}
                 className="shadow-lg shadow-primary/10 hover:shadow-primary/20 hover:scale-[1.02]"
               >
@@ -509,7 +510,7 @@ export const LandingPage: React.FC = () => {
               </p>
               <Button 
                 variant="primary" 
-                onClick={() => navigate('/signup')}
+                onClick={() => navigate(FRONTEND_ROUTES.SIGNUP)}
                 rightIcon={<ChevronRight className="h-4 w-4" />}
                 className="mt-2"
               >
@@ -571,7 +572,7 @@ export const LandingPage: React.FC = () => {
                 <Button 
                   variant="primary" 
                   size="lg" 
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate(FRONTEND_ROUTES.SIGNUP)}
                   className="shadow-lg shadow-primary/25 hover:shadow-primary/45 hover:scale-[1.02]"
                 >
                   Create Free Account
@@ -579,7 +580,7 @@ export const LandingPage: React.FC = () => {
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate(FRONTEND_ROUTES.LOGIN)}
                   className="border-slate-800 hover:border-slate-700 text-slate-200 hover:scale-[1.02]"
                 >
                   Login to Account

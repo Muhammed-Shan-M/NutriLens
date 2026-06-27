@@ -13,6 +13,7 @@ import FormDivider from '@/components/ui/FormDivider';
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { ApiError } from '@/types/api.types';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ export const LoginPage: React.FC = () => {
       toast.success('Welcome back to NutriLens!');
       
       // Navigate to dashboard and replace history stack so back button doesn't go back to login
-      navigate('/dashboard', { replace: true });
+      navigate(FRONTEND_ROUTES.DASHBOARD, { replace: true });
     } catch (err: unknown) {
       const apiError = err as ApiError;
       if (apiError.errors && Array.isArray(apiError.errors)) {
@@ -162,7 +163,7 @@ export const LoginPage: React.FC = () => {
       {/* Footer Navigation */}
       <div className="text-center text-xs text-slate-400 mt-2 font-normal">
         Don't have an account?{' '}
-        <Link to="/signup" className="text-primary hover:text-primary/80 hover:underline font-semibold transition-all">
+        <Link to={FRONTEND_ROUTES.SIGNUP} className="text-primary hover:text-primary/80 hover:underline font-semibold transition-all">
           Sign up
         </Link>
       </div>

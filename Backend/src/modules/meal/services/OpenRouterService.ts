@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { config } from '../../../config';
 import { ApiError } from '../../../shared/ApiError';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 import { AiNutritionResultDto } from '../dtos/Meal.dto';
 import { AnalyticsResponseDto } from '../../analytics/dtos/Analytics.dto';
 
@@ -52,7 +53,7 @@ export class OpenRouterService {
     if (!this.client) {
       const apiKey = config.openrouterApiKey;
       if (!apiKey) {
-        throw ApiError.internal('OPENROUTER_API_KEY is not configured in environment variables.');
+        throw ApiError.internal(ERROR_MESSAGES.OPENROUTER.KEY_NOT_CONFIGURED);
       }
       this.client = new OpenAI({
         baseURL: 'https://openrouter.ai/api/v1',
@@ -94,14 +95,14 @@ export class OpenRouterService {
       const rawText = response.choices[0]?.message?.content ?? '';
 
       if (!rawText) {
-        throw ApiError.internal('OpenRouter returned an empty response. Please try again.');
+        throw ApiError.internal(ERROR_MESSAGES.OPENROUTER.EMPTY_RESPONSE);
       }
 
       return this.parseResponse(rawText);
     } catch (error: unknown) {
       if (error instanceof ApiError) throw error;
       const message = error instanceof Error ? error.message : 'Unknown OpenRouter error';
-      throw ApiError.internal(`AI analysis failed: ${message}`);
+      throw ApiError.internal(ERROR_MESSAGES.MEAL.ANALYSIS_FAILED(message));
     }
   }
 
@@ -133,9 +134,7 @@ export class OpenRouterService {
       };
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Parse error';
-      throw ApiError.unprocessable(
-        `Could not parse AI response. The image may not contain recognizable food. (${message})`
-      );
+      throw ApiError.unprocessable(ERROR_MESSAGES.OPENROUTER.PARSE_FAILED(message));
     }
   }
   async generateInsight(analyticsData: AnalyticsResponseDto): Promise<string> {

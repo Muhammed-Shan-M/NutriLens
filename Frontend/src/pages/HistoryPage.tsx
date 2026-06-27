@@ -11,6 +11,7 @@ import MealHistoryCard from '@/features/history/components/MealHistoryCard';
 import MealDetailModal from '@/features/history/components/MealDetailModal';
 import EmptyState from '@/components/ui/EmptyState';
 import { useDebounce } from '@/hooks/useDebounce';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 const HistoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ const HistoryPage: React.FC = () => {
               Browse, search, and analyze your entire meal log history. Click any meal for a detailed nutrition breakdown.
             </p>
           </div>
-          <Button variant="primary" size="sm" onClick={() => navigate('/meals')} rightIcon={<Camera className="h-4 w-4" />}>
+          <Button variant="primary" size="sm" onClick={() => navigate(FRONTEND_ROUTES.MEALS)} rightIcon={<Camera className="h-4 w-4" />}>
             Log New Meal
           </Button>
         </div>
@@ -186,7 +187,7 @@ const HistoryPage: React.FC = () => {
               if (search || type !== 'all' || dateRange !== 'all') {
                 setSearch(''); setType('all'); setDateRange('all');
               } else {
-                navigate('/meals');
+                navigate(FRONTEND_ROUTES.MEALS);
               }
             }}
           />

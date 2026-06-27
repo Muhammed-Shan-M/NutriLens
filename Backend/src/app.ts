@@ -10,6 +10,7 @@ import { connectDatabase } from './database/connection';
 import { errorMiddleware } from './middlewares/error.middleware';
 import authRoutes from './modules/auth/routes/Auth.routes';
 import mealRoutes from './modules/meal/routes/Meal.routes';
+import ROUTES from './shared/routes.constants';
 
 const app = express();
 
@@ -38,15 +39,15 @@ import analyticsRoutes from './modules/analytics/routes/Analytics.routes';
 import profileRoutes from './modules/profile/routes/Profile.routes';
 
 // API Base Routes mapping
-app.use('/api/auth', authRoutes);
-app.use('/api/meals', mealRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/history', historyRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/profile', profileRoutes);
+app.use(ROUTES.BASE.AUTH, authRoutes);
+app.use(ROUTES.BASE.MEALS, mealRoutes);
+app.use(ROUTES.BASE.DASHBOARD, dashboardRoutes);
+app.use(ROUTES.BASE.HISTORY, historyRoutes);
+app.use(ROUTES.BASE.ANALYTICS, analyticsRoutes);
+app.use(ROUTES.BASE.PROFILE, profileRoutes);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get(ROUTES.BASE.HEALTH, (req, res) => {
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 

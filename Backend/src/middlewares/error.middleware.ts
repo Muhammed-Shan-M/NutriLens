@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../shared/ApiError';
 import { ApiResponse } from '../shared/ApiResponse';
+import { ERROR_MESSAGES } from '../shared/errorMessages.constants';
 
 interface ValidationErrorField {
   field: string;
@@ -27,7 +28,7 @@ export const errorMiddleware = (
   next: NextFunction
 ): void => {
   let statusCode = 500;
-  let message = 'Internal Server Error';
+  let message = ERROR_MESSAGES.AUTH.INTERNAL_SERVER_ERROR_FALLBACK;
   let errors: ValidationErrorField[] | null = null;
 
   // Handle custom ApiError instances
@@ -45,7 +46,7 @@ export const errorMiddleware = (
     const dupErr = err as MongooseDuplicateKeyError;
     statusCode = 409;
     const field = Object.keys(dupErr.keyValue || {})[0] || 'field';
-    message = `Duplicate value: '${field}' already exists.`;
+    message = ERROR_MESSAGES.DATABASE.DUPLICATE_VALUE(field);
   }
   // Handle generic validation errors (like Mongoose validation)
   else if (err instanceof Error && err.name === 'ValidationError') {
@@ -61,7 +62,7 @@ export const errorMiddleware = (
   else if (err instanceof Error && err.name === 'ZodError') {
     const zodErr = err as ZodValidationError;
     statusCode = 400;
-    message = 'Validation error occurred';
+    message = ERROR_MESSAGES.VALIDATION.ERROR_OCCURRED;
     errors = zodErr.errors;
   }
   // Default fallback for general errors

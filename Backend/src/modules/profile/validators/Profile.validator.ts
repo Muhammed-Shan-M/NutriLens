@@ -1,15 +1,16 @@
 import { z } from 'zod';
 import { ActivityLevel, FitnessGoal } from '../../../shared/enums';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export const updateProfileSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters').max(50, 'Full name cannot exceed 50 characters'),
-  age: z.number().int('Age must be a whole number').min(12, 'Age must be at least 12').max(120, 'Age cannot exceed 120'),
-  height: z.number().min(100, 'Height must be at least 100 cm').max(250, 'Height cannot exceed 250 cm'),
-  weight: z.number().min(30, 'Weight must be at least 30 kg').max(300, 'Weight cannot exceed 300 kg'),
+  fullName: z.string().min(2, ERROR_MESSAGES.VALIDATION.FULL_NAME_MIN).max(50, ERROR_MESSAGES.VALIDATION.FULL_NAME_MAX),
+  age: z.number().int(ERROR_MESSAGES.VALIDATION.AGE_INT).min(12, ERROR_MESSAGES.VALIDATION.AGE_MIN_PROFILE).max(120, ERROR_MESSAGES.VALIDATION.AGE_MAX_PROFILE),
+  height: z.number().min(100, ERROR_MESSAGES.VALIDATION.HEIGHT_MIN_PROFILE).max(250, ERROR_MESSAGES.VALIDATION.HEIGHT_MAX_PROFILE),
+  weight: z.number().min(30, ERROR_MESSAGES.VALIDATION.WEIGHT_MIN_PROFILE).max(300, ERROR_MESSAGES.VALIDATION.WEIGHT_MAX_PROFILE),
   activityLevel: z.nativeEnum(ActivityLevel, {
-    error: 'Invalid activity level selected'
+    error: ERROR_MESSAGES.VALIDATION.ACTIVITY_LEVEL_INVALID
   }),
   goal: z.nativeEnum(FitnessGoal, {
-    error: 'Invalid fitness goal selected'
+    error: ERROR_MESSAGES.VALIDATION.FITNESS_GOAL_INVALID
   })
 });

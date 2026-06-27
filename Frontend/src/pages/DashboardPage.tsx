@@ -16,6 +16,7 @@ import QuickActions from '@/features/dashboard/components/QuickActions';
 import WeeklyChart from '@/features/dashboard/components/WeeklyChart';
 import HealthSummaryCard from '@/features/dashboard/components/HealthSummaryCard';
 import DashboardSkeleton from '@/features/dashboard/components/DashboardSkeleton';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -62,7 +63,7 @@ const DashboardPage: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => navigate('/meals')}
+                onClick={() => navigate(FRONTEND_ROUTES.MEALS)}
                 rightIcon={<Camera className="h-4 w-4" />}
               >
                 Upload Meal

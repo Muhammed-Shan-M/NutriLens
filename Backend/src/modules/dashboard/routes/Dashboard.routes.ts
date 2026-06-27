@@ -4,6 +4,7 @@ import { DashboardService } from '../services/Dashboard.service';
 import { UserRepository } from '../../auth/repositories/User.repository';
 import { MealRepository } from '../../meal/repositories/Meal.repository';
 import { authMiddleware } from '../../../middlewares/auth.middleware';
+import ROUTES from '../../../shared/routes.constants';
 
 const router = Router();
 
@@ -15,7 +16,7 @@ const dashboardController = new DashboardController(dashboardService);
 
 // GET /api/dashboard/summary
 router.get(
-  '/summary',
+  ROUTES.DASHBOARD.SUMMARY,
   authMiddleware,
   dashboardController.getSummary
 );

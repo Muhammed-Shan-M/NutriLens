@@ -1,6 +1,7 @@
 import multer from 'multer';
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../shared/ApiError';
+import { ERROR_MESSAGES } from '../shared/errorMessages.constants';
 
 // ─── Allowed MIME types ────────────────────────────────────────────────────────
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -16,7 +17,7 @@ const upload = multer({
     } else {
       cb(
         new Error(
-          `Unsupported file type: ${file.mimetype}. Only JPEG, PNG, and WEBP images are accepted.`
+          ERROR_MESSAGES.FILE.UNSUPPORTED_TYPE(file.mimetype)
         )
       );
     }
@@ -29,9 +30,9 @@ export const multerUpload = (req: Request, res: Response, next: NextFunction): v
   singleUpload(req, res, (err: unknown) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {
-        return next(ApiError.badRequest('Image file is too large. Maximum allowed size is 10MB.'));
+        return next(ApiError.badRequest(ERROR_MESSAGES.FILE.LIMIT_EXCEEDED));
       }
-      return next(ApiError.badRequest(`Upload error: ${err.message}`));
+      return next(ApiError.badRequest(ERROR_MESSAGES.FILE.UPLOAD_ERROR(err.message)));
     }
     if (err instanceof Error) {
       return next(ApiError.badRequest(err.message));
@@ -43,7 +44,7 @@ export const multerUpload = (req: Request, res: Response, next: NextFunction): v
 // ─── Post-multer validation: ensure file is present ──────────────────────────
 export const imageValidationMiddleware = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.file) {
-    return next(ApiError.badRequest('No image was uploaded. Please include an image file in your request.'));
+    return next(ApiError.badRequest(ERROR_MESSAGES.FILE.NO_IMAGE_UPLOADED));
   }
   next();
 };

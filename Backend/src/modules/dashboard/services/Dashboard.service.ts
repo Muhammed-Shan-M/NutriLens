@@ -3,6 +3,7 @@ import { DashboardResponseDto } from '../dtos/Dashboard.dto';
 import { IUserRepository } from '../../auth/interfaces/IUserRepository.interface';
 import { IMealRepository } from '../../meal/interfaces/IMealRepository.interface';
 import { ApiError } from '../../../shared/ApiError';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class DashboardService implements IDashboardService {
   constructor(
@@ -13,7 +14,7 @@ export class DashboardService implements IDashboardService {
   async getSummary(userId: string): Promise<DashboardResponseDto> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw ApiError.notFound('User not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.USER.NOT_FOUND);
     }
 
     const todayMeals = await this.mealRepository.findTodayByUserId(userId);

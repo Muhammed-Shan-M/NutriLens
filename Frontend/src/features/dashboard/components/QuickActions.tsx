@@ -2,15 +2,16 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@/components/ui/Card';
 import { Camera, History, BarChart3, User, ChevronRight } from 'lucide-react';
+import FRONTEND_ROUTES from '../../../app/router/routes.constants';
 
 export const QuickActions: React.FC = () => {
   const navigate = useNavigate();
 
   const actions = [
-    { name: 'Upload Meal', path: '/meals', desc: 'Scan food using AI scanner', icon: <Camera className="h-4 w-4" />, colorClass: 'text-primary bg-primary/10 border-primary/20' },
-    { name: 'View History', path: '/history', desc: 'Review logged foods', icon: <History className="h-4 w-4" />, colorClass: 'text-secondary bg-secondary/10 border-secondary/20' },
-    { name: 'Analytics', path: '/analytics', desc: 'Explore monthly charts', icon: <BarChart3 className="h-4 w-4" />, colorClass: 'text-accent bg-accent/10 border-accent/20' },
-    { name: 'Profile', path: '/profile', desc: 'Manage metrics and goals', icon: <User className="h-4 w-4" />, colorClass: 'text-purple-400 bg-purple-400/10 border-purple-400/20' }
+    { name: 'Upload Meal', path: FRONTEND_ROUTES.MEALS, desc: 'Scan food using AI scanner', icon: <Camera className="h-4 w-4" />, colorClass: 'text-primary bg-primary/10 border-primary/20' },
+    { name: 'View History', path: FRONTEND_ROUTES.HISTORY, desc: 'Review logged foods', icon: <History className="h-4 w-4" />, colorClass: 'text-secondary bg-secondary/10 border-secondary/20' },
+    { name: 'Analytics', path: FRONTEND_ROUTES.ANALYTICS, desc: 'Explore monthly charts', icon: <BarChart3 className="h-4 w-4" />, colorClass: 'text-accent bg-accent/10 border-accent/20' },
+    { name: 'Profile', path: FRONTEND_ROUTES.PROFILE, desc: 'Manage metrics and goals', icon: <User className="h-4 w-4" />, colorClass: 'text-purple-400 bg-purple-400/10 border-purple-400/20' }
   ];
 
   return (

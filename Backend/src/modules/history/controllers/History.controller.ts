@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { HistoryService } from '../services/History.service';
 import { ApiResponse } from '../../../shared/ApiResponse';
 import { ApiError } from '../../../shared/ApiError';
+import { SUCCESS_MESSAGES } from '../../../shared/successMessages.constants';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class HistoryController {
   constructor(private readonly historyService: HistoryService) {
@@ -12,7 +14,7 @@ export class HistoryController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const query = req.query as {
@@ -25,7 +27,7 @@ export class HistoryController {
       };
 
       const history = await this.historyService.getHistory(userId, query);
-      ApiResponse.success(res, 200, 'Meal history retrieved successfully.', history);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.MEAL.HISTORY_RETRIEVED, history);
     } catch (error) {
       next(error);
     }

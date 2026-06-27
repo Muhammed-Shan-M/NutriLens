@@ -4,6 +4,7 @@ import AuthLayout from '../layouts/AuthLayout';
 import MainLayout from '../layouts/MainLayout';
 import ProtectedRoute from '@/features/auth/guards/ProtectedRoute';
 import PublicRoute from '@/features/auth/guards/PublicRoute';
+import FRONTEND_ROUTES from './routes.constants';
 
 // Page placeholders
 import LandingPage from '@/pages/LandingPage';
@@ -20,7 +21,7 @@ import NotFoundPage from '@/pages/NotFoundPage';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: FRONTEND_ROUTES.LANDING,
     element: <AppLayout />,
     children: [
       // Base landing page route
@@ -32,27 +33,27 @@ export const router = createBrowserRouter([
       {
         element: <PublicRoute><AuthLayout /></PublicRoute>,
         children: [
-          { path: 'login', element: <LoginPage /> },
-          { path: 'signup', element: <SignupPage /> },
+          { path: FRONTEND_ROUTES.LOGIN, element: <LoginPage /> },
+          { path: FRONTEND_ROUTES.SIGNUP, element: <SignupPage /> },
         ],
       },
       // Standalone setup pages wrapped in ProtectedRoute (No sidebar/MainLayout)
       {
         element: <ProtectedRoute />,
         children: [
-          { path: 'onboarding', element: <OnboardingPage /> },
-          { path: 'nutrition-plan', element: <NutritionPlanPage /> },
+          { path: FRONTEND_ROUTES.ONBOARDING, element: <OnboardingPage /> },
+          { path: FRONTEND_ROUTES.NUTRITION_PLAN, element: <NutritionPlanPage /> },
         ],
       },
       // App routes using MainLayout wrapped in ProtectedRoute
       {
         element: <ProtectedRoute><MainLayout /></ProtectedRoute>,
         children: [
-          { path: 'dashboard', element: <DashboardPage /> },
-          { path: 'meals', element: <MealsPage /> },
-          { path: 'history', element: <HistoryPage /> },
-          { path: 'analytics', element: <AnalyticsPage /> },
-          { path: 'profile', element: <ProfilePage /> },
+          { path: FRONTEND_ROUTES.DASHBOARD, element: <DashboardPage /> },
+          { path: FRONTEND_ROUTES.MEALS, element: <MealsPage /> },
+          { path: FRONTEND_ROUTES.HISTORY, element: <HistoryPage /> },
+          { path: FRONTEND_ROUTES.ANALYTICS, element: <AnalyticsPage /> },
+          { path: FRONTEND_ROUTES.PROFILE, element: <ProfilePage /> },
         ],
       },
       // 404 Fallback page

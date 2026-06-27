@@ -4,6 +4,7 @@ import { UpdateProfileInputDto, ProfileResponseDto } from '../dtos/Profile.dto';
 import { ApiError } from '../../../shared/ApiError';
 import { NutritionCalculator } from '../../../shared/utils/NutritionCalculator';
 import { IUserDocument } from '../../auth/models/User.model';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class ProfileService implements IProfileService {
   constructor(private readonly userRepository: IUserRepository) {}
@@ -35,7 +36,7 @@ export class ProfileService implements IProfileService {
   async getProfile(userId: string): Promise<ProfileResponseDto> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw ApiError.notFound('User profile not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.PROFILE.NOT_FOUND);
     }
     return this.toProfileResponseDto(user);
   }
@@ -43,7 +44,7 @@ export class ProfileService implements IProfileService {
   async updateProfile(userId: string, dto: UpdateProfileInputDto): Promise<ProfileResponseDto> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw ApiError.notFound('User profile not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.PROFILE.NOT_FOUND);
     }
 
     // Default to 'other' if gender is not set to prevent calculation crash
@@ -73,7 +74,7 @@ export class ProfileService implements IProfileService {
 
     const updatedUser = await this.userRepository.update(userId, updateData);
     if (!updatedUser) {
-      throw ApiError.internal('Failed to update profile.');
+      throw ApiError.internal(ERROR_MESSAGES.PROFILE.UPDATE_FAILED);
     }
 
     return this.toProfileResponseDto(updatedUser);

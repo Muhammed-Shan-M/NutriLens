@@ -6,6 +6,7 @@ import { authMiddleware } from '../../../middlewares/auth.middleware';
 import { validate } from '../../../middlewares/validation.middleware';
 import { multerUpload, imageValidationMiddleware } from '../../../middlewares/imageUpload.middleware';
 import { createMealSchema, updateMealSchema } from '../validators/Meal.validator';
+import ROUTES from '../../../shared/routes.constants';
 
 const router = Router();
 
@@ -16,28 +17,28 @@ const mealController = new MealController(mealService);
 
 // GET /api/meals/today
 router.get(
-  '/today',
+  ROUTES.MEALS.TODAY,
   authMiddleware,
   mealController.getToday
 );
 
 // GET /api/meals/history
 router.get(
-  '/history',
+  ROUTES.MEALS.HISTORY,
   authMiddleware,
   mealController.getHistory
 );
 
 // GET /api/meals/:id
 router.get(
-  '/:id',
+  ROUTES.MEALS.BY_ID,
   authMiddleware,
   mealController.getById
 );
 
 // POST /api/meals (manual log)
 router.post(
-  '/',
+  ROUTES.MEALS.BASE,
   authMiddleware,
   validate(createMealSchema),
   mealController.create
@@ -45,7 +46,7 @@ router.post(
 
 // PUT /api/meals/:id
 router.put(
-  '/:id',
+  ROUTES.MEALS.BY_ID,
   authMiddleware,
   validate(updateMealSchema),
   mealController.update
@@ -53,7 +54,7 @@ router.put(
 
 // DELETE /api/meals/:id
 router.delete(
-  '/:id',
+  ROUTES.MEALS.BY_ID,
   authMiddleware,
   mealController.delete
 );
@@ -61,7 +62,7 @@ router.delete(
 // POST /api/meals/analyze
 // Auth → Multer (memory) → File validation → Controller
 router.post(
-  '/analyze',
+  ROUTES.MEALS.ANALYZE,
   authMiddleware,
   multerUpload,
   imageValidationMiddleware,

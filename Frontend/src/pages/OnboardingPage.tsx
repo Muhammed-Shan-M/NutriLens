@@ -14,6 +14,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import PageContainer from '@/components/ui/PageContainer';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 export const OnboardingPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,7 @@ export const OnboardingPage: React.FC = () => {
       toast.success('Health profile computed successfully!');
       
       // Navigate to personalized nutrition plan page
-      navigate('/nutrition-plan');
+      navigate(FRONTEND_ROUTES.NUTRITION_PLAN);
     } catch (err: unknown) {
       const apiError = err as ApiError;
       toast.error(apiError.message || 'Failed to save health metrics. Please try again.');

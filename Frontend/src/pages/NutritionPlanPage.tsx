@@ -19,6 +19,7 @@ import type { ApiError } from '@/types/api.types';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import PageContainer from '@/components/ui/PageContainer';
+import FRONTEND_ROUTES from '../app/router/routes.constants';
 
 export const NutritionPlanPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
@@ -38,7 +39,7 @@ export const NutritionPlanPage: React.FC = () => {
       toast.success('Ready to track! Loading your dashboard...', { icon: '🚀' });
       
       // Redirect to dashboard page and replace history
-      navigate('/dashboard', { replace: true });
+      navigate(FRONTEND_ROUTES.DASHBOARD, { replace: true });
     } catch (err: unknown) {
       const apiError = err as ApiError;
       toast.error(apiError.message || 'Failed to complete onboarding. Please try again.');

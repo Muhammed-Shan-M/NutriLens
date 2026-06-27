@@ -6,6 +6,7 @@ import { MealMapper } from '../mappers/Meal.mapper';
 import { OpenRouterService } from './OpenRouterService';
 import { CloudinaryService } from './CloudinaryService';
 import { ApiError } from '../../../shared/ApiError';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class MealService implements IMealService {
   private readonly openRouterService: OpenRouterService;
@@ -32,7 +33,7 @@ export class MealService implements IMealService {
       cloudinaryResult = await this.cloudinaryService.uploadBuffer(imageBuffer, mimeType);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Cloudinary upload failed';
-      throw ApiError.internal(`Image storage failed after analysis: ${message}`);
+      throw ApiError.internal(ERROR_MESSAGES.MEAL.IMAGE_STORAGE_FAILED(message));
     }
 
     // ── Step 3: Persist Meal to MongoDB ───────────────────────────────────────
@@ -60,7 +61,7 @@ export class MealService implements IMealService {
       // Cleanup: delete the Cloudinary image since DB save failed
       await this.cloudinaryService.deleteImage(cloudinaryResult.publicId);
       const message = error instanceof Error ? error.message : 'Database save failed';
-      throw ApiError.internal(`Failed to record meal: ${message}`);
+      throw ApiError.internal(ERROR_MESSAGES.MEAL.RECORD_FAILED(message));
     }
 
     return MealMapper.toResponseDto(savedMeal);
@@ -69,11 +70,11 @@ export class MealService implements IMealService {
   async updateMeal(id: string, userId: string, data: UpdateMealInputDto): Promise<MealResponseDto> {
     const meal = await this.mealRepository.findById(id);
     if (!meal) {
-      throw ApiError.notFound('Meal log not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.MEAL.NOT_FOUND);
     }
 
     if (meal.userId.toString() !== userId) {
-      throw ApiError.forbidden('You are not authorized to update this meal log.');
+      throw ApiError.forbidden(ERROR_MESSAGES.MEAL.NOT_AUTHORIZED_UPDATE);
     }
 
     // Update properties
@@ -90,7 +91,7 @@ export class MealService implements IMealService {
 
     const updatedMeal = await this.mealRepository.update(id, updatedData);
     if (!updatedMeal) {
-      throw ApiError.internal('Failed to update meal log.');
+      throw ApiError.internal(ERROR_MESSAGES.MEAL.UPDATE_FAILED);
     }
 
     return MealMapper.toResponseDto(updatedMeal);
@@ -133,11 +134,11 @@ export class MealService implements IMealService {
   async getMealById(id: string, userId: string): Promise<MealResponseDto> {
     const meal = await this.mealRepository.findById(id);
     if (!meal) {
-      throw ApiError.notFound('Meal log not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.MEAL.NOT_FOUND);
     }
 
     if (meal.userId.toString() !== userId) {
-      throw ApiError.forbidden('You are not authorized to view this meal log.');
+      throw ApiError.forbidden(ERROR_MESSAGES.MEAL.NOT_AUTHORIZED_VIEW);
     }
 
     return MealMapper.toResponseDto(meal);
@@ -146,11 +147,11 @@ export class MealService implements IMealService {
   async deleteMeal(id: string, userId: string): Promise<void> {
     const meal = await this.mealRepository.findById(id);
     if (!meal) {
-      throw ApiError.notFound('Meal log not found.');
+      throw ApiError.notFound(ERROR_MESSAGES.MEAL.NOT_FOUND);
     }
 
     if (meal.userId.toString() !== userId) {
-      throw ApiError.forbidden('You are not authorized to delete this meal log.');
+      throw ApiError.forbidden(ERROR_MESSAGES.MEAL.NOT_AUTHORIZED_DELETE);
     }
 
     if (meal.cloudinaryPublicId) {

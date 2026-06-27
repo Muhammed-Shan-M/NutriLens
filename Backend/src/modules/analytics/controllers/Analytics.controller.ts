@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import { IAnalyticsService } from '../interfaces/IAnalyticsService.interface';
 import { ApiResponse } from '../../../shared/ApiResponse';
 import { ApiError } from '../../../shared/ApiError';
+import { SUCCESS_MESSAGES } from '../../../shared/successMessages.constants';
+import { ERROR_MESSAGES } from '../../../shared/errorMessages.constants';
 
 export class AnalyticsController {
   constructor(private readonly analyticsService: IAnalyticsService) {}
@@ -10,7 +12,7 @@ export class AnalyticsController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const period = (req.query.period as string) || '7d';
@@ -19,7 +21,7 @@ export class AnalyticsController {
 
       const result = await this.analyticsService.getAnalytics(userId, period, customStartDate, customEndDate);
 
-      ApiResponse.success(res, 200, 'Analytics retrieved successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.ANALYTICS.RETRIEVED, result);
     } catch (error) {
       next(error);
     }
@@ -29,7 +31,7 @@ export class AnalyticsController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return next(ApiError.unauthorized('Authentication required.'));
+        return next(ApiError.unauthorized(ERROR_MESSAGES.AUTH.REQUIRED));
       }
 
       const period = (req.query.period as string) || '7d';
@@ -38,7 +40,7 @@ export class AnalyticsController {
 
       const result = await this.analyticsService.getAnalyticsInsight(userId, period, customStartDate, customEndDate);
 
-      ApiResponse.success(res, 200, 'Analytics insight retrieved successfully.', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.ANALYTICS.INSIGHT_RETRIEVED, result);
     } catch (error) {
       next(error);
     }

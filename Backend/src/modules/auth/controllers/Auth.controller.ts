@@ -3,6 +3,7 @@ import { IAuthService } from '../interfaces/IAuthService.interface';
 import { ApiResponse } from '../../../shared/ApiResponse';
 import { UserMapper } from '../mappers/User.mapper';
 import { config } from '../../../config';
+import { SUCCESS_MESSAGES } from '../../../shared/successMessages.constants';
 
 export class AuthController {
   constructor(private authService: IAuthService) {}
@@ -38,7 +39,7 @@ export class AuthController {
       // Set secure authentication cookies
       this.setAuthCookies(res, result.accessToken, result.refreshToken);
 
-      ApiResponse.success(res, 201, 'User registered successfully', {
+      ApiResponse.success(res, 201, SUCCESS_MESSAGES.AUTH.REGISTERED, {
         user: result.user,
         accessToken: result.accessToken,
       });
@@ -54,7 +55,7 @@ export class AuthController {
       // Set secure authentication cookies
       this.setAuthCookies(res, result.accessToken, result.refreshToken);
 
-      ApiResponse.success(res, 200, 'User logged in successfully', {
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.AUTH.LOGGED_IN, {
         user: result.user,
         accessToken: result.accessToken,
       });
@@ -72,7 +73,7 @@ export class AuthController {
       // Update the access token cookie
       this.setAuthCookies(res, result.accessToken);
 
-      ApiResponse.success(res, 200, 'Token refreshed successfully', result);
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.AUTH.TOKEN_REFRESHED, result);
     } catch (error) {
       next(error);
     }
@@ -96,7 +97,7 @@ export class AuthController {
         path: '/',
       });
 
-      ApiResponse.success(res, 200, 'User logged out successfully');
+      ApiResponse.success(res, 200, SUCCESS_MESSAGES.AUTH.LOGGED_OUT);
     } catch (error) {
       next(error);
     }
@@ -110,7 +111,7 @@ export class AuthController {
       ApiResponse.success(
         res,
         200,
-        'Current user profile retrieved successfully',
+        SUCCESS_MESSAGES.AUTH.CURRENT_USER_RETRIEVED,
         UserMapper.toResponseDto(user)
       );
     } catch (error) {
@@ -126,7 +127,7 @@ export class AuthController {
       ApiResponse.success(
         res,
         200,
-        'Physical metrics updated successfully',
+        SUCCESS_MESSAGES.AUTH.METRICS_UPDATED,
         UserMapper.toResponseDto(user)
       );
     } catch (error) {
@@ -142,7 +143,7 @@ export class AuthController {
       ApiResponse.success(
         res,
         200,
-        'Onboarding completed successfully',
+        SUCCESS_MESSAGES.AUTH.ONBOARDING_COMPLETED,
         UserMapper.toResponseDto(user)
       );
     } catch (error) {
