@@ -16,9 +16,12 @@ import {
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import toast from 'react-hot-toast';
 import FRONTEND_ROUTES from '../router/routes.constants';
+import Dialog from '@/components/ui/Dialog';
 
 export const MainLayout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const { logout, user } = useAuth();
 
@@ -31,12 +34,16 @@ export const MainLayout: React.FC = () => {
   ];
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       await logout();
       toast.success('Successfully logged out!');
       navigate(FRONTEND_ROUTES.LANDING, { replace: true });
     } catch {
       toast.error('Logout failed. Please try again.');
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutDialog(false);
     }
   };
 
@@ -91,7 +98,7 @@ export const MainLayout: React.FC = () => {
           {/* Logout Section */}
           <div className="border-t border-slate-900/80 pt-4">
             <button
-              onClick={handleLogout}
+              onClick={() => setShowLogoutDialog(true)}
               className="flex w-full items-center px-4 py-3 text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 rounded-2xl transition-all duration-200"
             >
               <LogOut className="mr-3.5 h-5 w-5 shrink-0" />
@@ -209,7 +216,7 @@ export const MainLayout: React.FC = () => {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  handleLogout();
+                  setShowLogoutDialog(true);
                 }}
                 className="flex w-full items-center px-4 py-3 text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 rounded-2xl transition-all duration-200"
               >
@@ -220,6 +227,16 @@ export const MainLayout: React.FC = () => {
           </div>
         </div>
       )}
+      <Dialog
+        isOpen={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+        title="Sign Out"
+        message="Are you sure you want to sign out of your account?"
+        type="danger"
+        confirmLabel="Sign Out"
+        onConfirm={handleLogout}
+        isLoading={isLoggingOut}
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,7 @@ import { getProfile, updateProfile } from '@/lib/profile.api';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import type { UpdateProfileInput, ProfileResponse } from '@/types/profile.types';
 import type { ApiError } from '@/types/api.types';
+import Dialog from '@/components/ui/Dialog';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters').max(50, 'Too long'),
@@ -31,6 +32,8 @@ type ProfileFormValues = z.infer<typeof profileSchema>;
 export const ProfilePage: React.FC = () => {
   const queryClient = useQueryClient();
   const { logout } = useAuth();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { data: profile, isLoading, isError } = useQuery({
     queryKey: ['profile'],
@@ -76,10 +79,18 @@ export const ProfilePage: React.FC = () => {
     updateMutation.mutate(data);
   };
 
-  const handleLogout = () => {
-    logout();
-    queryClient.clear();
-    toast.success('Logged out successfully');
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await logout();
+      queryClient.clear();
+      toast.success('Logged out successfully');
+    } catch {
+      toast.error('Logout failed. Please try again.');
+    } finally {
+      setIsLoggingOut(false);
+      setShowLogoutDialog(false);
+    }
   };
 
   if (isLoading) {
@@ -177,7 +188,7 @@ export const ProfilePage: React.FC = () => {
               <Card.Title className="text-sm">Account Actions</Card.Title>
             </Card.Header>
             <Card.Content>
-              <Button variant="outline" className="w-full justify-center text-red-500 hover:text-red-400 border-red-900/50 hover:bg-red-900/20" onClick={handleLogout}>
+              <Button variant="outline" className="w-full justify-center text-red-500 hover:text-red-400 border-red-900/50 hover:bg-red-900/20" onClick={() => setShowLogoutDialog(true)}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
@@ -331,6 +342,16 @@ export const ProfilePage: React.FC = () => {
           
         </div>
       </div>
+      <Dialog
+        isOpen={showLogoutDialog}
+        onClose={() => setShowLogoutDialog(false)}
+        title="Sign Out"
+        message="Are you sure you want to sign out of your account?"
+        type="danger"
+        confirmLabel="Sign Out"
+        onConfirm={handleLogout}
+        isLoading={isLoggingOut}
+      />
     </PageContainer>
   );
 };
