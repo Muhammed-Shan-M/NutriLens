@@ -2,10 +2,22 @@ import React from 'react';
 import Card from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import { Apple, Sun, Moon, Sparkles, Inbox } from 'lucide-react';
-import type { MealResponseDto } from '@/types/meal.types';
+export interface TimelineMeal {
+  id: string;
+  imageUrl: string;
+  mealName: string;
+  mealType: string;
+  calories: number;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
+  sugar: number;
+  time: string;
+  createdAt: Date | string;
+}
 
 interface MealTimelineProps {
-  meals?: MealResponseDto[];
+  meals?: TimelineMeal[];
 }
 
 export const MealTimeline: React.FC<MealTimelineProps> = ({ meals = [] }) => {
@@ -20,7 +32,7 @@ export const MealTimeline: React.FC<MealTimelineProps> = ({ meals = [] }) => {
     {
       type: 'Breakfast',
       name: breakfastMeals.length > 0 ? breakfastMeals.map(m => m.mealName).join(', ') : 'No breakfast recorded',
-      calories: breakfastMeals.length > 0 ? `${breakfastMeals.reduce((sum, m) => sum + m.totalCalories, 0)} kcal` : null,
+      calories: breakfastMeals.length > 0 ? `${breakfastMeals.reduce((sum, m) => sum + m.calories, 0)} kcal` : null,
       time: '7:30 AM',
       icon: <Apple className="h-4 w-4" />,
       iconColor: breakfastMeals.length > 0 ? 'text-amber-400 bg-amber-400/10 border-amber-400/20' : 'text-slate-500 bg-slate-800/40 border-slate-700/20',
@@ -29,7 +41,7 @@ export const MealTimeline: React.FC<MealTimelineProps> = ({ meals = [] }) => {
     {
       type: 'Lunch',
       name: lunchMeals.length > 0 ? lunchMeals.map(m => m.mealName).join(', ') : 'No lunch recorded',
-      calories: lunchMeals.length > 0 ? `${lunchMeals.reduce((sum, m) => sum + m.totalCalories, 0)} kcal` : null,
+      calories: lunchMeals.length > 0 ? `${lunchMeals.reduce((sum, m) => sum + m.calories, 0)} kcal` : null,
       time: '1:00 PM',
       icon: <Sun className="h-4 w-4" />,
       iconColor: lunchMeals.length > 0 ? 'text-primary bg-primary/10 border-primary/20' : 'text-slate-500 bg-slate-800/40 border-slate-700/20',
@@ -38,7 +50,7 @@ export const MealTimeline: React.FC<MealTimelineProps> = ({ meals = [] }) => {
     {
       type: 'Dinner',
       name: dinnerMeals.length > 0 ? dinnerMeals.map(m => m.mealName).join(', ') : 'No dinner recorded',
-      calories: dinnerMeals.length > 0 ? `${dinnerMeals.reduce((sum, m) => sum + m.totalCalories, 0)} kcal` : null,
+      calories: dinnerMeals.length > 0 ? `${dinnerMeals.reduce((sum, m) => sum + m.calories, 0)} kcal` : null,
       time: '7:30 PM',
       icon: <Moon className="h-4 w-4" />,
       iconColor: dinnerMeals.length > 0 ? 'text-blue-400 bg-blue-400/10 border-blue-400/20' : 'text-slate-500 bg-slate-800/40 border-slate-700/20',
@@ -47,7 +59,7 @@ export const MealTimeline: React.FC<MealTimelineProps> = ({ meals = [] }) => {
     {
       type: 'Snack',
       name: snackMeals.length > 0 ? snackMeals.map(m => m.mealName).join(', ') : 'No snacks recorded',
-      calories: snackMeals.length > 0 ? `${snackMeals.reduce((sum, m) => sum + m.totalCalories, 0)} kcal` : null,
+      calories: snackMeals.length > 0 ? `${snackMeals.reduce((sum, m) => sum + m.calories, 0)} kcal` : null,
       time: 'Any time',
       icon: <Sparkles className="h-4 w-4" />,
       iconColor: snackMeals.length > 0 ? 'text-purple-400 bg-purple-400/10 border-purple-400/20' : 'text-slate-500 bg-slate-800/40 border-slate-700/20',

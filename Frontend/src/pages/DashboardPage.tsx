@@ -145,7 +145,7 @@ const DashboardPage: React.FC = () => {
 
         {/* Timeline + Weekly Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <MealTimeline meals={todayMeals as any} />
+          <MealTimeline meals={todayMeals} />
           <WeeklyChart targetCalories={nutritionSummary.calories.target} />
         </div>
 

@@ -28,10 +28,15 @@ axiosInstance.interceptors.request.use(
 );
 
 // Lock to prevent multiple simultaneous refresh requests
-let isRefreshing = false;
-let failedQueue: any[] = [];
+interface FailedRequestQueueItem {
+  resolve: (token: string | null) => void;
+  reject: (error: unknown) => void;
+}
 
-const processQueue = (error: any, token: string | null = null) => {
+let isRefreshing = false;
+let failedQueue: FailedRequestQueueItem[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);

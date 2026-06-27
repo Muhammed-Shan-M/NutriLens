@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, type TooltipContentProps } from 'recharts';
 import Card from '@/components/ui/Card';
 import { BarChart3 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
@@ -37,7 +37,7 @@ export const WeeklyChart: React.FC<WeeklyChartProps> = ({ targetCalories }) => {
   ];
 
   // Custom tooltip style
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: Partial<TooltipContentProps<number, string>>) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs shadow-xl">

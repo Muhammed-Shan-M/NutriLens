@@ -12,6 +12,7 @@ import AuthHeader from '@/components/ui/AuthHeader';
 import FormDivider from '@/components/ui/FormDivider';
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import type { ApiError } from '@/types/api.types';
 
 export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -45,9 +46,10 @@ export const LoginPage: React.FC = () => {
       
       // Navigate to dashboard and replace history stack so back button doesn't go back to login
       navigate('/dashboard', { replace: true });
-    } catch (err: any) {
-      if (err.errors && Array.isArray(err.errors)) {
-        err.errors.forEach((validationErr: any) => {
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      if (apiError.errors && Array.isArray(apiError.errors)) {
+        apiError.errors.forEach((validationErr) => {
           const field = validationErr.field as 'email' | 'password';
           setError(field, {
             type: 'server',
@@ -55,7 +57,7 @@ export const LoginPage: React.FC = () => {
           });
         });
       } else {
-        toast.error(err.message || 'Authentication failed. Please verify credentials.');
+        toast.error(apiError.message || 'Authentication failed. Please verify credentials.');
       }
     } finally {
       setLoading(false);

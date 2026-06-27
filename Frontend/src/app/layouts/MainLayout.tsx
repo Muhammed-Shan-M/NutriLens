@@ -34,7 +34,7 @@ export const MainLayout: React.FC = () => {
       await logout();
       toast.success('Successfully logged out!');
       navigate('/', { replace: true });
-    } catch (err: any) {
+    } catch {
       toast.error('Logout failed. Please try again.');
     }
   };

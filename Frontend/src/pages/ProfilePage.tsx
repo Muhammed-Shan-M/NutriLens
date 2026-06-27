@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
@@ -14,7 +14,8 @@ import Button from '@/components/ui/Button';
 import Skeleton from '@/components/ui/Skeleton';
 import { getProfile, updateProfile } from '@/lib/profile.api';
 import { useAuth } from '@/features/auth/hooks/useAuth';
-import type { UpdateProfileInput } from '@/types/profile.types';
+import type { UpdateProfileInput, ProfileResponse } from '@/types/profile.types';
+import type { ApiError } from '@/types/api.types';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters').max(50, 'Too long'),
@@ -42,7 +43,7 @@ export const ProfilePage: React.FC = () => {
     reset,
     formState: { errors, isDirty },
   } = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema) as any,
+    resolver: zodResolver(profileSchema) as Resolver<ProfileFormValues>,
   });
 
   useEffect(() => {
@@ -52,13 +53,13 @@ export const ProfilePage: React.FC = () => {
         age: profile.age || 0,
         height: profile.height || 0,
         weight: profile.weight || 0,
-        activityLevel: (profile.activityLevel as any) || 'sedentary',
-        goal: (profile.goal as any) || 'maintain_weight',
+        activityLevel: (profile.activityLevel as ProfileFormValues['activityLevel']) || 'sedentary',
+        goal: (profile.goal as ProfileFormValues['goal']) || 'maintain_weight',
       });
     }
   }, [profile, reset]);
 
-  const updateMutation = useMutation({
+  const updateMutation = useMutation<ProfileResponse, ApiError, UpdateProfileInput>({
     mutationFn: (data: UpdateProfileInput) => updateProfile(data),
     onSuccess: () => {
       toast.success('Profile updated successfully!');
@@ -66,7 +67,7 @@ export const ProfilePage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });
       queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       toast.error(error.message || 'Failed to update profile.');
     },
   });

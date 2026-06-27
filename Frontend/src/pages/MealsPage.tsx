@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { analyzeMeal, getTodayMeals, updateMeal } from '@/lib/meal.api';
 import type { MealResponseDto } from '@/types/meal.types';
 import { useQueryClient } from '@tanstack/react-query';
+import type { ApiError } from '@/types/api.types';
 import PageContainer from '@/components/ui/PageContainer';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -122,8 +123,9 @@ export const MealsPage: React.FC = () => {
       
       setState('editing');
       toast.success('AI Analysis Complete! Please review details below.');
-    } catch (err: any) {
-      const msg = err.message || 'AI analysis failed. Please try again.';
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      const msg = apiError.message || 'AI analysis failed. Please try again.';
 
       setState('idle');
       toast.error(msg);
@@ -136,7 +138,7 @@ export const MealsPage: React.FC = () => {
     try {
       await updateMeal(currentMealId, {
         mealName: foodName,
-        mealType: mealType as any,
+        mealType: mealType,
         totalCalories: Number(calories),
         protein: Number(protein),
         carbohydrates: Number(carbs),
@@ -150,8 +152,9 @@ export const MealsPage: React.FC = () => {
       handleRemove();
       await loadTodayLogs();
       queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to save meal.');
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      toast.error(apiError.message || 'Failed to save meal.');
       setState('editing');
     }
   };
@@ -300,7 +303,7 @@ export const MealsPage: React.FC = () => {
                       </label>
                       <select
                         value={mealType}
-                        onChange={(e: any) => setMealType(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setMealType(e.target.value as 'breakfast' | 'lunch' | 'dinner' | 'snack')}
                         className="w-full bg-surface-medium border border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/10 transition-all duration-200"
                       >
                         <option value="breakfast">Breakfast</option>

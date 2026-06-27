@@ -12,6 +12,7 @@ import AuthHeader from '@/components/ui/AuthHeader';
 import FormDivider from '@/components/ui/FormDivider';
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import type { ApiError } from '@/types/api.types';
 
 export const SignupPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -48,9 +49,10 @@ export const SignupPage: React.FC = () => {
       
       // Redirect new users to onboarding and replace history
       navigate('/onboarding', { replace: true });
-    } catch (err: any) {
-      if (err.errors && Array.isArray(err.errors)) {
-        err.errors.forEach((validationErr: any) => {
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      if (apiError.errors && Array.isArray(apiError.errors)) {
+        apiError.errors.forEach((validationErr) => {
           // Map backend 'fullName' error back to frontend 'name' field
           const field = validationErr.field === 'fullName' ? 'name' : (validationErr.field as 'name' | 'email' | 'password' | 'confirmPassword');
           setError(field, {
@@ -59,7 +61,7 @@ export const SignupPage: React.FC = () => {
           });
         });
       } else {
-        toast.error(err.message || 'Registration failed. Please try again.');
+        toast.error(apiError.message || 'Registration failed. Please try again.');
       }
     } finally {
       setLoading(false);

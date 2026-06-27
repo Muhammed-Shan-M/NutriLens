@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from '@/components/ui/Card';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, type TooltipContentProps } from 'recharts';
 
 interface MacronutrientPieChartProps {
   data: {
@@ -12,7 +12,7 @@ interface MacronutrientPieChartProps {
 
 const COLORS = ['#ef4444', '#f59e0b', '#3b82f6']; // Red (Protein), Amber (Carbs), Blue (Fat)
 
-const CustomTooltip = ({ active, payload }: any) => {
+const CustomTooltip = ({ active, payload }: Partial<TooltipContentProps<number, string>>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700 p-3 rounded-lg shadow-xl">

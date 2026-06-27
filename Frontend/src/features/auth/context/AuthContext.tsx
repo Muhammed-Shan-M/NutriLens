@@ -27,12 +27,28 @@ export interface User {
   createdAt: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignupUserData {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
+export interface AuthResponseData {
+  user: User;
+  accessToken: string;
+}
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: any) => Promise<any>;
-  signup: (userData: any) => Promise<any>;
+  login: (credentials: LoginCredentials) => Promise<AuthResponseData>;
+  signup: (userData: SignupUserData) => Promise<AuthResponseData>;
   logout: () => Promise<void>;
 }
 
@@ -63,9 +79,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   // Login mutation
-  const loginMutation = useMutation({
-    mutationFn: async (credentials: any) => {
-      const res = await axiosInstance.post('/auth/login', credentials);
+  const loginMutation = useMutation<AuthResponseData, Error, LoginCredentials>({
+    mutationFn: async (credentials: LoginCredentials) => {
+      const res = await axiosInstance.post<{ success: boolean; data: AuthResponseData }>('/auth/login', credentials);
       return res.data.data; // Expected { user, accessToken }
     },
     onSuccess: (data) => {
@@ -75,9 +91,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   // Signup mutation
-  const signupMutation = useMutation({
-    mutationFn: async (userData: any) => {
-      const res = await axiosInstance.post('/auth/signup', userData);
+  const signupMutation = useMutation<AuthResponseData, Error, SignupUserData>({
+    mutationFn: async (userData: SignupUserData) => {
+      const res = await axiosInstance.post<{ success: boolean; data: AuthResponseData }>('/auth/signup', userData);
       return res.data.data; // Expected { user, accessToken }
     },
     onSuccess: (data) => {
@@ -98,11 +114,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
   });
 
-  const login = async (credentials: any) => {
+  const login = async (credentials: LoginCredentials) => {
     return loginMutation.mutateAsync(credentials);
   };
 
-  const signup = async (userData: any) => {
+  const signup = async (userData: SignupUserData) => {
     return signupMutation.mutateAsync(userData);
   };
 

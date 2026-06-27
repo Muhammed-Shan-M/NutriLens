@@ -15,6 +15,7 @@ import {
 import toast from 'react-hot-toast';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import axiosInstance from '@/lib/axios';
+import type { ApiError } from '@/types/api.types';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import PageContainer from '@/components/ui/PageContainer';
@@ -38,8 +39,9 @@ export const NutritionPlanPage: React.FC = () => {
       
       // Redirect to dashboard page and replace history
       navigate('/dashboard', { replace: true });
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to complete onboarding. Please try again.');
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      toast.error(apiError.message || 'Failed to complete onboarding. Please try again.');
     } finally {
       setSubmitting(false);
     }

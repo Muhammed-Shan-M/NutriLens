@@ -1,14 +1,14 @@
 import React from 'react';
 import Card from '@/components/ui/Card';
 import type { CaloriesChartDto } from '@/types/analytics.types';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Cell, type TooltipContentProps } from 'recharts';
 
 interface WeeklyCaloriesChartProps {
   data: CaloriesChartDto[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
+const CustomTooltip = ({ active, payload, label }: Partial<TooltipContentProps<number, string>>) => {
+  if (active && payload && payload.length && label) {
     return (
       <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700 p-3 rounded-lg shadow-xl">
         <p className="text-xs text-slate-400 mb-1">{new Date(label).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>

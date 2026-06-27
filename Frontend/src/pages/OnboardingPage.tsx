@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { onboardingSchema } from '@/validators/auth.validator';
 import type { OnboardingInput } from '@/validators/auth.validator';
 import axiosInstance from '@/lib/axios';
+import type { ApiError } from '@/types/api.types';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -24,7 +25,7 @@ export const OnboardingPage: React.FC = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<OnboardingInput>({
-    resolver: zodResolver(onboardingSchema) as any,
+    resolver: zodResolver(onboardingSchema) as Resolver<OnboardingInput>,
     defaultValues: {
       age: 25,
       gender: 'male',
@@ -48,8 +49,9 @@ export const OnboardingPage: React.FC = () => {
       
       // Navigate to personalized nutrition plan page
       navigate('/nutrition-plan');
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to save health metrics. Please try again.');
+    } catch (err: unknown) {
+      const apiError = err as ApiError;
+      toast.error(apiError.message || 'Failed to save health metrics. Please try again.');
     } finally {
       setLoading(false);
     }
